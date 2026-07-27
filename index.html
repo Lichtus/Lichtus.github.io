@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marcin Lichtarski — Python, AI &amp; automatyzacja</title>
+<meta name="description" content="Buduję aplikacje w Pythonie i automatyzacje z agentami AI: CRM wdrożony produkcyjnie, modele predykcyjne, wyszukiwanie semantyczne, workflow n8n.">
+<meta name="color-scheme" content="dark">
+
+<!-- Open Graph — podgląd przy wysyłaniu linku -->
+<meta property="og:title" content="Marcin Lichtarski — Python, AI &amp; automatyzacja">
+<meta property="og:description" content="Aplikacje w Pythonie i automatyzacje z agentami AI. CRM wdrożony produkcyjnie, modele predykcyjne, bazy wektorowe, n8n.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lichtus.github.io">
+
+<style>
+  :root {
+    /* ---- paleta: Grafit i limonka ---- */
+    --bg:         #0c0d0f;
+    --tile:       #16181c;
+    --tile2:      #1d2025;
+    --line:       #282c33;
+    --line-hover: #3a3f48;
+    --fg:         #f0f2f4;
+    --dim:        #9aa1ab;
+    --faint:      #666d78;
+    --lime:       #a3e635;   /* akcent główny */
+    --sky:        #38bdf8;   /* linki, oznaczenia */
+    --orange:     #fb923c;   /* trzeci akcent, gradienty */
+    --on-lime:    #12180a;   /* tekst na limonkowym tle */
+    --glow1:      rgba(163,230,53,.16);
+    --glow2:      rgba(56,189,248,.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 1rem;
+  }
+  a { color: inherit; text-decoration: none; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 1rem 0 3rem; }
+
+  /* ==================== SIATKA BENTO ==================== */
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: .9rem; }
+  .tile {
+    background: var(--tile);
+    border: 1px solid var(--line);
+    border-radius: 1.1rem;
+    padding: 1.5rem;
+    grid-column: span 6;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .25s, transform .25s;
+  }
+  .tile:hover { border-color: var(--line-hover); }
+  a.tile:hover { transform: translateY(-3px); border-color: var(--lime); }
+  a.tile:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+
+  @media (min-width: 760px) {
+    .c2 { grid-column: span 2; }
+    .c3 { grid-column: span 3; }
+    .c4 { grid-column: span 4; }
+    .c6 { grid-column: span 6; }
+  }
+
+  /* ==================== KAFEL POWITALNY ==================== */
+  .hero {
+    background:
+      radial-gradient(120% 120% at 0% 0%, var(--glow1), transparent 55%),
+      radial-gradient(100% 100% at 100% 100%, var(--glow2), transparent 50%),
+      var(--tile);
+    padding: 2.5rem 1.75rem;
+  }
+  .avatar {
+    width: 3.6rem; height: 3.6rem; border-radius: 1.1rem;
+    background: linear-gradient(135deg, var(--lime), var(--orange));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; font-weight: 700; color: var(--on-lime);
+    margin-bottom: 1.25rem; letter-spacing: -.02em;
+  }
+  .hero h1 {
+    font-size: clamp(1.9rem, 5vw, 2.9rem);
+    font-weight: 700; letter-spacing: -.035em; line-height: 1.12;
+    margin-bottom: .85rem;
+  }
+  .hero .grad {
+    background: linear-gradient(100deg, var(--lime), var(--orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { color: var(--dim); max-width: 36rem; margin-bottom: 1.5rem; }
+
+  .btns { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .btn {
+    font-size: .875rem; font-weight: 600;
+    padding: .55rem 1.1rem; border-radius: .7rem;
+    border: 1px solid var(--line); color: var(--dim);
+    transition: all .2s;
+  }
+  .btn:hover { color: var(--fg); border-color: var(--lime); }
+  .btn:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+  .btn.solid { background: var(--lime); border-color: var(--lime); color: var(--on-lime); }
+  .btn.solid:hover { filter: brightness(1.1); color: var(--on-lime); }
+
+  /* ==================== KAFEL DOSTĘPNOŚCI ==================== */
+  .avail { display: flex; flex-direction: column; justify-content: center; }
+  .avail .status {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .78rem; font-weight: 600; color: var(--lime);
+    margin-bottom: .6rem;
+  }
+  .pulse {
+    width: .5rem; height: .5rem; border-radius: 50%; background: var(--lime);
+    box-shadow: 0 0 0 0 rgba(163,230,53,.6);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(163,230,53,.55); }
+    70%  { box-shadow: 0 0 0 .55rem rgba(163,230,53,0); }
+    100% { box-shadow: 0 0 0 0 rgba(163,230,53,0); }
+  }
+  .avail p { font-size: .85rem; color: var(--dim); margin-bottom: 1rem; }
+
+  /* ==================== KAFLE Z LICZBAMI ==================== */
+  .stat { display: flex; flex-direction: column; justify-content: center; min-height: 7rem; }
+  .stat .n {
+    font-size: 2.4rem; font-weight: 700; letter-spacing: -.04em;
+    line-height: 1; margin-bottom: .3rem;
+  }
+  .stat .n.v1 { color: var(--lime); }
+  .stat .n.v2 { color: var(--sky); }
+  .stat .n.v3 { color: var(--orange); }
+  .stat .l { font-size: .8rem; color: var(--faint); }
+
+  /* ==================== NAGŁÓWKI KAFLI ==================== */
+  .tile-label {
+    font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--faint); margin-bottom: 1.1rem;
+  }
+  .section-head { background: transparent; border: none; padding: 1rem 0 0; }
+  .section-head:hover { border-color: transparent; }
+
+  /* ==================== PROJEKTY ==================== */
+  .proj { display: flex; flex-direction: column; }
+  .proj-top { display: flex; align-items: center; gap: .6rem; margin-bottom: .8rem; }
+  .dot { width: .5rem; height: .5rem; border-radius: 50%; flex-shrink: 0; }
+  .dot.prod { background: var(--lime); box-shadow: 0 0 8px var(--lime); }
+  .dot.pub  { background: var(--sky);  box-shadow: 0 0 8px var(--sky); }
+  .dot.priv { background: var(--faint); }
+  .proj-top span:last-child {
+    font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--faint);
+  }
+  .proj h3 {
+    font-size: 1.1rem; font-weight: 650; letter-spacing: -.02em;
+    margin-bottom: .55rem; transition: color .2s;
+  }
+  a.tile:hover h3 { color: var(--lime); }
+  .proj p { font-size: .875rem; color: var(--dim); margin-bottom: 1rem; flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .chip {
+    font-size: .72rem; padding: .18rem .55rem; border-radius: .45rem;
+    background: var(--tile2); border: 1px solid var(--line); color: var(--dim);
+  }
+  .arrow { margin-top: 1rem; font-size: .82rem; font-weight: 600; color: var(--sky); }
+
+  /* ==================== STACK ==================== */
+  .skill-rows { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .skill-rows { grid-template-columns: repeat(2, 1fr); } }
+  .skill-rows h4 {
+    font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--sky); margin-bottom: .5rem;
+  }
+
+  /* ==================== O MNIE ==================== */
+  .about p { color: var(--dim); font-size: .95rem; margin-bottom: .9rem; }
+  .about p:last-child { margin-bottom: 0; }
+  .about strong { color: var(--fg); font-weight: 600; }
+
+  /* ==================== LISTY (nauka, języki) ==================== */
+  .rows { display: flex; flex-direction: column; gap: .85rem; }
+  .row { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .row .k { font-size: .9rem; color: var(--fg); }
+  .row .k small { display: block; font-size: .78rem; color: var(--faint); font-weight: 400; }
+  .row .v { font-size: .78rem; color: var(--faint); white-space: nowrap; }
+  .row .v.on { color: var(--lime); }
+
+  /* ==================== KONTAKT ==================== */
+  .contact {
+    background: linear-gradient(120deg, var(--glow1), var(--glow2)), var(--tile);
+    text-align: center; padding: 2.25rem 1.5rem;
+  }
+  .contact h2 { font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: .6rem; }
+  .contact p { color: var(--dim); margin-bottom: 1.4rem; }
+  .contact .btns { justify-content: center; }
+
+  footer { text-align: center; color: var(--faint); font-size: .78rem; padding-top: 1.75rem; }
+  footer a:hover { color: var(--sky); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .tile, a.tile:hover { transition: none; transform: none; }
+    .pulse { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bento">
+
+    <!-- ==================== POWITANIE ==================== -->
+    <div class="tile hero c4">
+      <div class="avatar">ML</div>
+      <h1>Marcin Lichtarski<br><span class="grad">Python, AI &amp; automatyzacja</span></h1>
+      <p>
+        Buduję aplikacje i automatyzacje, które skracają codzienną pracę — od CRM-a
+        wdrożonego produkcyjnie, przez modele predykcyjne i wyszukiwanie semantyczne,
+        po agentów AI analizujących pocztę i generujących oferty.
+      </p>
+      <div class="btns">
+        <a class="btn solid" href="#projekty">Projekty</a>
+        <a class="btn" href="https://github.com/Lichtus" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn" href="#kontakt">Kontakt</a>
+      </div>
+    </div>
+
+    <div class="tile avail c2">
+      <span class="status"><span class="pulse"></span> Otwarty na współpracę</span>
+      <p>Projekty z Pythonem, LLM i automatyzacją procesów — etat, kontrakt lub zlecenie.</p>
+      <div class="btns">
+        <a class="btn" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+
+    <!-- ==================== LICZBY ==================== -->
+    <div class="tile stat c2">
+      <div class="n v1">8</div>
+      <div class="l">projektów w portfolio, 6 z otwartym kodem</div>
+    </div>
+    <div class="tile stat c2">
+      <div class="n v2">6</div>
+      <div class="l">aplikacji z modelem językowym w środku</div>
+    </div>
+    <div class="tile stat c2">
+      <div class="n v3">1</div>
+      <div class="l">system wdrożony produkcyjnie w firmie</div>
+    </div>
+
+    <!-- ==================== O MNIE ==================== -->
+    <div class="tile about c6">
+      <div class="tile-label">O mnie</div>
+      <p>
+        Piszę w <strong>Pythonie</strong> i buduję rzeczy, które da się uruchomić:
+        aplikacje w Streamlit, modele predykcyjne, integracje z zewnętrznymi API
+        i workflow w <strong>n8n</strong> z agentami AI w środku.
+      </p>
+      <p>
+        Najczęściej pracuję nad narzędziami dla firm produkcyjnych — systemami do
+        obsługi klientów, kalkulatorami wycen i automatyzacją ofertowania. Rozwiązanie
+        projektuję i piszę sam, od modelu danych po interfejs.
+      </p>
+      <p>
+        W praktyce oznacza to spinanie rozproszonych narzędzi w jeden działający
+        ekosystem: API, baza danych, model językowy i prosty interfejs, z którego
+        ktoś naprawdę korzysta.
+      </p>
+    </div>
+
+    <!-- ==================== PROJEKTY ==================== -->
+    <div class="tile section-head c6" id="projekty">
+      <div class="tile-label" style="margin-bottom:0">Projekty</div>
+    </div>
+
+    <div class="tile proj c3">
+      <div class="proj-top"><span class="dot prod"></span><span>Wdrożenie produkcyjne</span></div>
+      <h3>MyCRM — system CRM zbudowany od zera</h3>
+      <p>
+        Dedykowany CRM napisany w Pythonie i wdrożony w firmie produkcyjnej — zastąpił
+        śledzenie leadów w arkuszach kalkulacyjnych. Daje pełną widoczność procesu
+        sprzedaży: od pierwszego kontaktu, przez ofertę, po wdrożenie produktu.
+        Zaprojektowany od modelu danych po interfejs, z myślą o ludziach, którzy
+        korzystają z niego codziennie.
+      </p>
+      <div class="chips">
+        <span class="chip">Python</span><span class="chip">Baza danych</span>
+        <span class="chip">Model danych</span><span class="chip">CRUD</span>
+      </div>
+    </div>
+
+    <a class="tile proj c3" href="https://github.com/Lichtus/MyHealthOS" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>MyHealthOS — multimodalny asystent zdrowotny</h3>
+      <p>
+        Bot Telegrama przyjmuje dane głosem, zdjęciem lub tekstem, backend w FastAPI
+        zapisuje je do PostgreSQL, a dashboard w Streamlit analizuje. GPT-4o Vision
+        rozpoznaje jedzenie ze zdjęć, Whisper transkrybuje głos, dane biometryczne
+        (sen, kroki, body battery) dociągają się automatycznie z Garmin Connect.
+        Najbardziej rozbudowany architektonicznie projekt w portfolio.
+      </p>
+      <div class="chips">
+        <span class="chip">FastAPI</span><span class="chip">PostgreSQL</span>
+        <span class="chip">Telegram Bot</span><span class="chip">GPT-4o Vision</span>
+        <span class="chip">Whisper</span><span class="chip">Garmin API</span>
+        <span class="chip">Streamlit</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <div class="tile proj c2">
+      <div class="proj-top"><span class="dot priv"></span><span>Automatyzacja</span></div>
+      <h3>Agent AI do analizy zapytań ofertowych</h3>
+      <p>
+        Workflow w n8n, który odbiera zapytania mailowe od klientów, wyciąga z nich
+        parametry zlecenia i przygotowuje wstępną ofertę. Model językowy czyta
+        nieustrukturyzowaną treść maila i zamienia ją w dane, na których da się liczyć.
+      </p>
+      <div class="chips">
+        <span class="chip">n8n</span><span class="chip">Agenci AI</span>
+        <span class="chip">OpenAI API</span><span class="chip">Integracje API</span>
+      </div>
+    </div>
+
+    <a class="tile proj c2" href="https://github.com/Lichtus/halfmaraton-time-calculator" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>Kalkulator czasu półmaratonu</h3>
+      <p>
+        Model przewidujący czas na mecie z płci, wieku i czasu na 5 km. LLM wyciąga
+        parametry ze swobodnego opisu, aplikacja pilnuje zakresu treningowego i unika
+        data leakage. Dane: Półmaraton Wrocławski 2023–2024.
+      </p>
+      <div class="chips">
+        <span class="chip">PyCaret</span><span class="chip">Streamlit</span>
+        <span class="chip">OpenAI</span><span class="chip">Langfuse</span>
+        <span class="chip">DigitalOcean</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <a class="tile proj c2" href="https://github.com/Lichtus/image-finder" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>Image Finder</h3>
+      <p>
+        Wyszukiwarka zdjęć sterowana zdaniem. GPT-4o Vision opisuje obrazy, opisy trafiają
+        jako embeddingi do bazy wektorowej Qdrant — szukasz znaczeniem, nie słowem
+        kluczowym. Plus wykrywanie duplikatów.
+      </p>
+      <div class="chips">
+        <span class="chip">Qdrant</span><span class="chip">OpenAI Vision</span>
+        <span class="chip">Embeddingi</span><span class="chip">Streamlit</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <a class="tile proj c2" href="https://github.com/Lichtus/CV-Fit-Analyzer" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>CV Fit Analyzer</h3>
+      <p>
+        Analizuje ogłoszenie, wyciąga wymagania i ocenia dopasowanie w skali 0–100
+        wraz z mocnymi stronami i lukami. Po przekroczeniu progu generuje gotowe CV
+        w DOCX i HTML, w języku ogłoszenia. Buduje dokument wyłącznie z Twoich danych —
+        niczego nie zmyśla. Do wyboru OpenAI albo Gemini, interfejs graficzny lub CLI.
+      </p>
+      <div class="chips">
+        <span class="chip">Streamlit</span><span class="chip">OpenAI</span>
+        <span class="chip">Gemini</span><span class="chip">DOCX / HTML</span>
+        <span class="chip">CLI</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <a class="tile proj c2" href="https://github.com/Lichtus/voice_notes_bot_telegram" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>Bot notatek głosowych</h3>
+      <p>
+        Przyjmuje notatkę głosową lub plik audio, transkrybuje ją Whisperem,
+        a GPT-4o-mini wyciąga temat, opis i listę zadań. Notatki trafiają do SQLite
+        z wyszukiwaniem semantycznym — głosowym i tekstowym — z procentem dopasowania.
+      </p>
+      <div class="chips">
+        <span class="chip">Whisper</span><span class="chip">GPT-4o-mini</span>
+        <span class="chip">SQLite</span><span class="chip">Telegram API</span>
+        <span class="chip">Wyszukiwanie semantyczne</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <a class="tile proj c2" href="https://github.com/Lichtus/Participant-Segmentation-App" target="_blank" rel="noopener noreferrer">
+      <div class="proj-top"><span class="dot pub"></span><span>Kod publiczny</span></div>
+      <h3>Segmentacja uczestników</h3>
+      <p>
+        Aplikacja przypisująca użytkownika do klastra na podstawie kilku odpowiedzi
+        ankietowych. Model klastrowania wytrenowany w PyCaret, wynik pokazany razem
+        z charakterystyką grupy i wykresami porównującymi rozkłady cech.
+      </p>
+      <div class="chips">
+        <span class="chip">PyCaret</span><span class="chip">Klasteryzacja</span>
+        <span class="chip">Streamlit</span><span class="chip">Plotly</span>
+      </div>
+      <div class="arrow">Zobacz kod →</div>
+    </a>
+
+    <!-- ==================== STACK ==================== -->
+    <div class="tile c6">
+      <div class="tile-label">Stack</div>
+      <div class="skill-rows">
+        <div>
+          <h4>Python &amp; dane</h4>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">NumPy</span>
+            <span class="chip">SQL</span><span class="chip">PyCaret</span>
+            <span class="chip">Klasteryzacja</span><span class="chip">EDA</span>
+            <span class="chip">Plotly</span><span class="chip">Power BI</span>
+          </div>
+        </div>
+        <div>
+          <h4>AI, LLM &amp; agenci</h4>
+          <div class="chips">
+            <span class="chip">OpenAI API</span><span class="chip">Gemini</span>
+            <span class="chip">instructor</span><span class="chip">Inżynieria promptów</span>
+            <span class="chip">Embeddingi</span><span class="chip">Qdrant</span>
+            <span class="chip">Langfuse</span>
+          </div>
+        </div>
+        <div>
+          <h4>Automatyzacja &amp; integracje</h4>
+          <div class="chips">
+            <span class="chip">n8n</span><span class="chip">Agenci AI</span>
+            <span class="chip">Integracje API</span><span class="chip">Telegram API</span>
+            <span class="chip">Whisper / STT</span>
+          </div>
+        </div>
+        <div>
+          <h4>Backend &amp; wdrożenia</h4>
+          <div class="chips">
+            <span class="chip">FastAPI</span><span class="chip">PostgreSQL</span>
+            <span class="chip">SQLite</span><span class="chip">Streamlit</span>
+            <span class="chip">DigitalOcean</span><span class="chip">Spaces / S3</span>
+            <span class="chip">Git</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== NAUKA I JĘZYKI ==================== -->
+    <div class="tile c4">
+      <div class="tile-label">Nauka</div>
+      <div class="rows">
+        <div class="row">
+          <span class="k">Warsztaty z budowania agentów AI
+            <small>Eskadra Bielika</small>
+          </span>
+          <span class="v on">2026</span>
+        </div>
+        <div class="row">
+          <span class="k">Od Zera do AI — Gotoit
+            <small>ML w Pythonie, agenci n8n, OpenAI API, bazy wektorowe</small>
+          </span>
+          <span class="v on">2025–2026</span>
+        </div>
+        <div class="row">
+          <span class="k">AIDEAS — 3. kohorta
+            <small>Generator Pomysłów i Politechnika Wrocławska</small>
+          </span>
+          <span class="v">2025</span>
+        </div>
+        <div class="row">
+          <span class="k">Automatyka i Robotyka
+            <small>Politechnika Wrocławska, mgr inż.</small>
+          </span>
+          <span class="v">1998–2003</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tile c2">
+      <div class="tile-label">Języki</div>
+      <div class="rows">
+        <div class="row"><span class="k">Polski</span><span class="v">ojczysty</span></div>
+        <div class="row"><span class="k">Angielski</span><span class="v">zaawansowany</span></div>
+        <div class="row"><span class="k">Niemiecki</span><span class="v">zaawansowany</span></div>
+      </div>
+    </div>
+
+    <!-- ==================== KONTAKT ==================== -->
+    <div class="tile contact c6" id="kontakt">
+      <h2>Porozmawiajmy</h2>
+      <p>
+        Otwarty na projekty z Pythonem, modelami językowymi i automatyzacją procesów.
+        Najszybciej złapiesz mnie na LinkedInie.
+      </p>
+      <div class="btns">
+        <a class="btn solid" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <!-- UWAGA: CV w folderze zawiera numer telefonu. Przed podlinkowaniem
+             przygotuj wersję bez numeru, inaczej trafi on do botów spamowych.
+        <a class="btn" href="cv.pdf">Pobierz CV</a>
+        -->
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    © <span id="year">2026</span> Marcin Lichtarski ·
+    <a href="https://github.com/Lichtus" target="_blank" rel="noopener noreferrer">github.com/Lichtus</a>
+  </footer>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

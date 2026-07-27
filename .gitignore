@@ -1,0 +1,10 @@
+.DS_Store
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# CV zawiera numer telefonu — repo GitHub Pages jest publiczne
+*.pdf
+
+# robocze warianty układu i palet — zostają lokalnie
+warianty/
