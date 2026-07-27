@@ -8,3 +8,6 @@ __pycache__/
 
 # robocze warianty układu i palet — zostają lokalnie
 warianty/
+
+# notatki robocze — zostają lokalnie
+README.md
