@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyCRM — CRM dla sprzedaży B2B w firmie produkcyjnej | Marcin Lichtarski</title>
+<meta name="description" content="Dedykowany CRM w Pythonie i PostgreSQL, wdrożony produkcyjnie: pipeline z bramkami jakościowymi, generowanie ofert, integracja z API GUS, 19 500 linii kodu.">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="MyCRM — CRM dla sprzedaży B2B w firmie produkcyjnej">
+<meta property="og:description" content="Pipeline z bramkami jakościowymi, generowanie ofert z szablonów, integracja z API GUS. Python, Streamlit, PostgreSQL. Wdrożenie produkcyjne.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lichtus.github.io/projekty/mycrm/">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div id="spot"></div>
+
+<article class="pp">
+
+  <a class="pp-back" href="../../"><span class="arr">←</span> Powrót do portfolio</a>
+
+  <p class="pp-kicker">● Wdrożenie produkcyjne</p>
+  <h1>MyCRM</h1>
+
+  <p class="pp-lead">
+    System CRM dedykowany sprzedaży B2B w firmie produkcyjnej — tam, gdzie proces
+    nie kończy się na „deal wygrany", tylko prowadzi przez wycenę techniczną,
+    ofertę i negocjacje do nominacji.
+  </p>
+
+  <!-- ==================== PROBLEM ==================== -->
+  <section>
+    <h2>Problem</h2>
+    <p>
+      Sprzedaż komponentów przemysłowych rządzi się inną logiką niż klasyczny lejek CRM.
+      Zapytanie ofertowe trafia najpierw do oceny wykonalności, potem do wyceny kosztowej,
+      następnie do zatwierdzenia oferty — a każdy z tych kroków angażuje inną osobę
+      i wymaga innego kompletu danych. Gotowe CRM-y albo tego nie modelują, albo wymagają
+      kosztownej konfiguracji. <strong>MyCRM odwzorowuje ten proces wprost.</strong>
+    </p>
+  </section>
+
+  <!-- ==================== PIPELINE ==================== -->
+  <section>
+    <h2>Pipeline z bramkami jakościowymi</h2>
+
+    <div class="pp-flow">
+      <span>RFQ Received</span><i>→</i>
+      <span>Feasibility</span><i>→</i>
+      <span>Quotation</span><i>→</i>
+      <span>Offer Approval</span><i>→</i>
+      <span>Negotiation</span><i>→</i>
+      <span>Nomination/Order</span>
+    </div>
+
+    <p>
+      Każdy etap ma zdefiniowane warunki wejścia, weryfikowane przy próbie przesunięcia
+      dealu. Nie da się przejść do wyceny bez przypisanego project managera i kosztorysanta,
+      ani do zatwierdzenia oferty bez numeru oferty i wgranego PDF-a. Etapów nie można też
+      przeskakiwać. Dzięki temu <strong>dane w systemie są kompletne z założenia,
+      a nie z dobrej woli użytkownika</strong>.
+    </p>
+  </section>
+
+  <!-- ==================== ZRZUTY EKRANU ==================== -->
+  <section>
+    <h2>Jak to wygląda</h2>
+
+    <figure class="pp-shot">
+      <img src="img/01-deals.jpg" width="1400" height="695" alt="Lista deali z filtrami, kolorowym oznaczeniem etapów i kwalifikacji" loading="lazy">
+      <figcaption>
+        Lista deali z filtrami po statusie, dacie zapytania i etapie. Kolor tła komórki
+        koduje etap i kwalifikację, więc stan całego portfela widać bez wczytywania się
+        w treść. Wiersz podświetlony na czerwono oznacza przekroczony termin wysłania
+        oferty — ostrzeżenie pojawia się tylko na etapach przed negocjacjami, gdzie
+        jeszcze da się zareagować.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="img/02-pipeline.jpg" width="1400" height="695" alt="Widok Kanban: sześć kolumn etapów z licznikami i sumami wartości" loading="lazy">
+      <figcaption>
+        Kanban z sześcioma etapami procesu. Nagłówek każdej kolumny podaje liczbę deali
+        i sumę wartości, a karty niosą komplet informacji potrzebnych do decyzji: temperaturę
+        (HOT/WARM/COLD), przypisanego PM-a i kosztorysanta, status NDA oraz termin oferty.
+        Ostrzeżenie „OFFER NOT SENT" przy przekroczonym terminie wyłapuje sprawy, które
+        w arkuszu kalkulacyjnym po prostu by przepadły.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="img/03-analytics.jpg" width="1400" height="695" alt="Panel analityczny: wskaźniki KPI oraz wykresy wartości i liczby deali wg etapów" loading="lazy">
+      <figcaption>
+        Moduł analityczny liczy wartość pipeline'u, liczbę aktywnych deali, skuteczność
+        i średnią wartość transakcji. Wykresy Plotly pokazują rozkład wartości i liczby
+        deali po etapach oraz trend miesięczny. Całość eksportuje się do Excela i PDF-a,
+        więc raport na spotkanie zarządu powstaje jednym kliknięciem.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="img/04-top-deals.jpg" width="1400" height="695" alt="Zestawienia najlepszych deali: aktywne, wygrane i przegrane" loading="lazy">
+      <figcaption>
+        Zestawienia aktywnych, wygranych i przegranych transakcji. Wartości podawane są
+        jako widełki, bo na wczesnych etapach precyzyjna kwota jest złudzeniem.
+        Przy przegranych zapisywany jest powód — jak w przykładzie: cena wyższa
+        od konkurencji o około 12%. To zamienia listę porażek w materiał do analizy.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ==================== FUNKCJE ==================== -->
+  <section>
+    <h2>Funkcje</h2>
+    <ul class="pp-list">
+      <li><b>Kanban</b> — wizualny pipeline z przeciąganiem deali między etapami, oznaczeniem temperatury (HOT/WARM/COLD) i automatyczną archiwizacją zamkniętych transakcji</li>
+      <li><b>Leady i konwersja</b> — osobny lejek relacyjny, z konwersją do dealu przenoszącą dane firmy i kontaktu; opcjonalnie tworzy strukturę katalogów projektowych na dysku</li>
+      <li><b>Generowanie ofert</b> — dokumenty Word z szablonów <code>.docx</code> (wersja polska i angielska), z podstawianiem danych deala i wstawianiem tabel cenowych z Excela</li>
+      <li><b>Numeracja</b> — automatyczne numery RFQ i ofert wg konfigurowalnych szablonów (<code>YY_XXX_KGP</code>, <code>OFF-YY-DEAL-XXX</code>), edytowalnych z poziomu ustawień</li>
+      <li><b>Integracja z API GUS</b> — pobieranie danych firmy po numerze NIP, z 30-dniowym cache'em w bazie</li>
+      <li><b>Analityka</b> — raporty konwersji, wartości pipeline'u i czasów w etapach; wykresy Plotly, eksport do PDF i Excela</li>
+      <li><b>Import/eksport</b> — masowe wczytywanie firm i kontaktów z Excela wraz z szablonem i walidacją</li>
+      <li><b>Załączniki</b> — pliki trzymane w bazie jako <code>BYTEA</code>, dzięki czemu jeden backup obejmuje komplet danych, bez zależności od systemu plików</li>
+      <li><b>Wielowalutowość</b> — przeliczanie na walutę bazową wg kursów konfigurowanych w systemie</li>
+    </ul>
+  </section>
+
+  <!-- ==================== UPRAWNIENIA ==================== -->
+  <section>
+    <h2>Uprawnienia i bezpieczeństwo</h2>
+    <p>
+      Sześć ról (admin, sales, PM, kosztorysant, sales+CE, viewer) z 24 uprawnieniami każda,
+      trzymanymi w bazie i edytowalnymi z panelu administracyjnego <strong>bez zmian
+      w kodzie</strong>. Logowanie oparte na bcrypt z sesją cookie, pełny audyt operacji,
+      historia zmian ról użytkowników. Usuwanie rekordów jest miękkie — trafiają do kosza
+      z możliwością przywrócenia przez administratora.
+    </p>
+  </section>
+
+  <!-- ==================== SKALA ==================== -->
+  <section>
+    <h2>Skala</h2>
+    <div class="pp-stats">
+      <div class="pp-stat">
+        <div class="n">19 500</div>
+        <div class="l">linii Pythona w 52 modułach</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">2 000</div>
+        <div class="l">linii SQL</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">18</div>
+        <div class="l">tabel, 235 kolumn, 24 migracje</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">9</div>
+        <div class="l">modułów funkcjonalnych</div>
+      </div>
+    </div>
+    <p style="margin-top:1.2rem">
+      Wdrożenie na Linuksie (systemd + nginx) lub Windows.
+    </p>
+  </section>
+
+  <!-- ==================== ROZWIĄZANIA ==================== -->
+  <section>
+    <h2>Rozwiązania warte uwagi</h2>
+
+    <div class="pp-card">
+      <h3>Wersjonowanie schematu bazy</h3>
+      <p>
+        Dedykowany runner migracji z tabelą śledzącą, komendami <code>status</code> /
+        <code>up</code> / <code>baseline</code> i odmową działania przy niespójnym stanie.
+        Powstał po tym, jak trzy migracje po cichu ominęły produkcyjną bazę.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>Numeracja odporna na import danych</h3>
+      <p>
+        Generator numerów RFQ czyta wzorzec z konfiguracji i odtwarza sekwencję
+        z istniejących rekordów, uwzględniając także usunięte — bo raz wystawiony numer
+        nie może wrócić do puli.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>Podwójna ścieżka instalacji</h3>
+      <p>
+        Pełny skrypt SQL dla świeżej bazy i idempotentna sekcja domykająca dla baz
+        istniejących — obie utrzymywane w zgodzie i weryfikowane automatycznie.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== STACK ==================== -->
+  <section>
+    <h2>Stack</h2>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">Streamlit</span>
+      <span class="chip">PostgreSQL</span><span class="chip">pandas</span>
+      <span class="chip">Plotly</span><span class="chip">ReportLab</span>
+      <span class="chip">python-docx</span><span class="chip">XlsxWriter</span>
+      <span class="chip">bcrypt</span><span class="chip">psycopg2</span>
+    </div>
+  </section>
+
+  <!-- ==================== KONTAKT ==================== -->
+  <section>
+    <div class="cta">
+      <h3>Chcesz o tym porozmawiać?</h3>
+      <p>Chętnie opowiem o szczegółach wdrożenia albo o podobnym systemie dla Twojego procesu.</p>
+      <a class="cta-btn" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">
+        Napisz na LinkedIn <span class="out">↗</span>
+      </a>
+    </div>
+    <footer style="margin-top:2rem">
+      <a href="../../">← Powrót do portfolio</a>
+    </footer>
+  </section>
+
+</article>
+
+<script src="../../script.js"></script>
+</body>
+</html>
