@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyCRM — a CRM for B2B sales in manufacturing | Marcin Lichtarski</title>
+<meta name="description" content="A bespoke CRM in Python and PostgreSQL, running in production: a pipeline with quality gates, quote generation, tax-registry API integration, 19,500 lines of code.">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="MyCRM — a CRM for B2B sales in manufacturing">
+<meta property="og:description" content="A pipeline with quality gates, quote generation from templates, tax-registry API integration. Python, Streamlit, PostgreSQL. Running in production.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lichtus.github.io/en/projects/mycrm/">
+<meta property="og:locale" content="en_GB">
+<link rel="alternate" hreflang="pl" href="https://lichtus.github.io/projekty/mycrm/">
+<link rel="alternate" hreflang="en" href="https://lichtus.github.io/en/projects/mycrm/">
+<link rel="alternate" hreflang="x-default" href="https://lichtus.github.io/projekty/mycrm/">
+<link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+<div id="spot"></div>
+
+<article class="pp">
+
+  <div class="pp-top">
+    <a class="pp-back" href="../../"><span class="arr">←</span> Back to portfolio</a>
+    <div class="lang">
+      <a href="../../../projekty/mycrm/" hreflang="pl">PL</a><span class="sep">/</span><span class="on">EN</span>
+    </div>
+  </div>
+
+  <p class="pp-kicker">● Running in production</p>
+  <h1>MyCRM</h1>
+
+  <p class="pp-lead">
+    A CRM built for B2B sales in a manufacturing company — where the process does not
+    end at „deal won", but runs through technical costing, the quote and negotiations
+    all the way to nomination.
+  </p>
+
+  <!-- ==================== PROBLEM ==================== -->
+  <section>
+    <h2>The problem</h2>
+    <p>
+      Selling industrial components follows a different logic from the classic CRM funnel.
+      An enquiry first goes to a feasibility review, then to cost estimation, then to
+      quote approval — and each of those steps involves a different person and needs
+      a different set of data. Off-the-shelf CRMs either do not model this at all, or
+      require expensive configuration. <strong>MyCRM maps the process directly.</strong>
+    </p>
+  </section>
+
+  <!-- ==================== PIPELINE ==================== -->
+  <section>
+    <h2>A pipeline with quality gates</h2>
+
+    <div class="pp-flow">
+      <span>RFQ Received</span><i>→</i>
+      <span>Feasibility</span><i>→</i>
+      <span>Quotation</span><i>→</i>
+      <span>Offer Approval</span><i>→</i>
+      <span>Negotiation</span><i>→</i>
+      <span>Nomination/Order</span>
+    </div>
+
+    <p>
+      Every stage has defined entry conditions, checked whenever someone tries to move
+      a deal forward. You cannot reach costing without an assigned project manager and
+      cost engineer, nor quote approval without an offer number and an uploaded PDF.
+      Stages cannot be skipped either. As a result, <strong>the data in the system is
+      complete by design, not by the user's goodwill</strong>.
+    </p>
+  </section>
+
+  <!-- ==================== SCREENSHOTS ==================== -->
+  <section>
+    <h2>What it looks like</h2>
+
+    <figure class="pp-shot">
+      <img src="../../../projekty/mycrm/img/01-deals.jpg" width="1400" height="695" alt="Deal list with filters and colour-coded stages and qualification" loading="lazy">
+      <figcaption>
+        The deal list, filtered by status, enquiry date and stage. Cell background colour
+        encodes the stage and qualification, so the state of the whole portfolio is visible
+        without reading a single row in detail. A row highlighted in red means the offer
+        deadline has passed — the warning only appears on stages before negotiation,
+        where there is still time to react.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="../../../projekty/mycrm/img/02-pipeline.jpg" width="1400" height="695" alt="Kanban view: six stage columns with deal counts and total values" loading="lazy">
+      <figcaption>
+        A Kanban board with the six stages of the process. Each column header gives the
+        number of deals and their combined value, while the cards carry everything needed
+        for a decision: temperature (HOT/WARM/COLD), the assigned PM and cost engineer,
+        NDA status and the offer deadline. The „OFFER NOT SENT" warning catches the cases
+        that would simply vanish in a spreadsheet.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="../../../projekty/mycrm/img/03-analytics.jpg" width="1400" height="695" alt="Analytics panel: KPIs and charts of deal value and count by stage" loading="lazy">
+      <figcaption>
+        The analytics module computes pipeline value, the number of active deals, win rate
+        and average deal size. Plotly charts show how value and deal count are distributed
+        across stages, plus the monthly trend. Everything exports to Excel and PDF, so
+        a board-meeting report is one click away.
+      </figcaption>
+    </figure>
+
+    <figure class="pp-shot">
+      <img src="../../../projekty/mycrm/img/04-top-deals.jpg" width="1400" height="695" alt="Top deals: active, won and lost" loading="lazy">
+      <figcaption>
+        Rankings of active, won and lost deals. Values are shown as ranges, because at the
+        early stages a precise figure is an illusion. Lost deals record the reason — as in
+        the example: roughly 12% above the competition. That turns a list of failures into
+        material worth analysing.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ==================== FEATURES ==================== -->
+  <section>
+    <h2>Features</h2>
+    <ul class="pp-list">
+      <li><b>Kanban</b> — a visual pipeline with drag-and-drop between stages, temperature markers (HOT/WARM/COLD) and automatic archiving of closed deals</li>
+      <li><b>Leads and conversion</b> — a separate relationship funnel, with conversion to a deal carrying over company and contact data; optionally creates the project folder structure on disk</li>
+      <li><b>Quote generation</b> — Word documents from <code>.docx</code> templates (Polish and English), filling in deal data and inserting price tables from Excel</li>
+      <li><b>Numbering</b> — automatic RFQ and offer numbers from configurable patterns (<code>YY_XXX_KGP</code>, <code>OFF-YY-DEAL-XXX</code>), editable from the settings screen</li>
+      <li><b>Tax-registry API integration</b> — company details pulled by VAT number, cached in the database for 30 days</li>
+      <li><b>Analytics</b> — conversion reports, pipeline value and time-in-stage; Plotly charts, export to PDF and Excel</li>
+      <li><b>Import/export</b> — bulk loading of companies and contacts from Excel, with a template and validation</li>
+      <li><b>Attachments</b> — files stored in the database as <code>BYTEA</code>, so a single backup covers the complete dataset with no dependency on the file system</li>
+      <li><b>Multi-currency</b> — conversion to a base currency using rates configured in the system</li>
+    </ul>
+  </section>
+
+  <!-- ==================== PERMISSIONS ==================== -->
+  <section>
+    <h2>Permissions and security</h2>
+    <p>
+      Six roles (admin, sales, PM, cost engineer, sales+CE, viewer) with 24 permissions each,
+      held in the database and editable from the admin panel <strong>without touching
+      the code</strong>. Login built on bcrypt with a cookie session, a full audit trail
+      and a history of role changes. Deletion is soft — records go to a bin and an
+      administrator can restore them.
+    </p>
+  </section>
+
+  <!-- ==================== SCALE ==================== -->
+  <section>
+    <h2>Scale</h2>
+    <div class="pp-stats">
+      <div class="pp-stat">
+        <div class="n">19,500</div>
+        <div class="l">lines of Python across 52 modules</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">2,000</div>
+        <div class="l">lines of SQL</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">18</div>
+        <div class="l">tables, 235 columns, 24 migrations</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">9</div>
+        <div class="l">functional modules</div>
+      </div>
+    </div>
+    <p style="margin-top:1.2rem">
+      Deployed on Linux (systemd + nginx) or Windows.
+    </p>
+  </section>
+
+  <!-- ==================== NOTABLE SOLUTIONS ==================== -->
+  <section>
+    <h2>Solutions worth a mention</h2>
+
+    <div class="pp-card">
+      <h3>Database schema versioning</h3>
+      <p>
+        A dedicated migration runner with a tracking table, <code>status</code> /
+        <code>up</code> / <code>baseline</code> commands and a refusal to run when the
+        state is inconsistent. It was written after three migrations quietly bypassed
+        the production database.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>Numbering that survives data imports</h3>
+      <p>
+        The RFQ number generator reads the pattern from configuration and reconstructs
+        the sequence from existing records, including deleted ones — because a number
+        once issued must never return to the pool.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>A dual installation path</h3>
+      <p>
+        A full SQL script for a fresh database and an idempotent catch-up section for
+        existing ones — both kept in agreement and verified automatically.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== STACK ==================== -->
+  <section>
+    <h2>Stack</h2>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">Streamlit</span>
+      <span class="chip">PostgreSQL</span><span class="chip">pandas</span>
+      <span class="chip">Plotly</span><span class="chip">ReportLab</span>
+      <span class="chip">python-docx</span><span class="chip">XlsxWriter</span>
+      <span class="chip">bcrypt</span><span class="chip">psycopg2</span>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section>
+    <div class="cta">
+      <h3>Want to talk about it?</h3>
+      <p>Happy to go into the details of the rollout, or into a similar system for your own process.</p>
+      <a class="cta-btn" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">
+        Message me on LinkedIn <span class="out">↗</span>
+      </a>
+    </div>
+    <footer style="margin-top:2rem">
+      <a href="../../">← Back to portfolio</a>
+    </footer>
+  </section>
+
+</article>
+
+<script src="../../../script.js"></script>
+</body>
+</html>

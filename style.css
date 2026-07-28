@@ -369,3 +369,11 @@
   .pp-flow i { display: none; }
   .pp-flow span { white-space: nowrap; font-size: .73rem; }
 }
+
+/* pasek nad stroną projektu: powrót + przełącznik języka */
+.pp-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; margin-bottom: 2.5rem;
+}
+.pp-top .pp-back { margin-bottom: 0; }
+.pp-top .lang { margin-top: 0; }
