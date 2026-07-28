@@ -359,45 +359,13 @@
 /* ============================================================
    ZRZUTY EKRANU — powiększanie
    ============================================================ */
-.pp-zoom { display: block; }
-/* plakietka siedzi na <figure>, nie w kontenerze przewijanym — inaczej uciekałaby w bok */
-.pp-shot { position: relative; }
-.pp-shot::after {
-  content: "Powiększ ↗";
-  position: absolute; right: .6rem; top: .6rem;
-  font-size: .7rem; font-weight: 600;
-  padding: .28rem .65rem; border-radius: .4rem;
-  background: rgba(12,13,15,.85); color: var(--fg);
-  border: 1px solid var(--line);
-  opacity: 0; transition: opacity .2s; pointer-events: none;
-}
-.pp-shot:hover::after { opacity: 1; }
-@media (hover: none) { .pp-shot::after { opacity: 1; } }
-
-.pp-hint {
-  font-size: .85rem; color: var(--faint);
-  margin-top: -.4rem; margin-bottom: 1.4rem;
-}
 
 /* --- zrzuty i ścieżka procesu na wąskim ekranie --- */
 @media (max-width: 1023px) {
-  /* zrzut da się przesuwać palcem — inaczej gęsty interfejs jest nieczytelny */
-  .pp-zoom {
-    overflow-x: auto; -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--line); border-radius: .7rem;
-    scrollbar-width: none;
-  }
-  .pp-zoom::-webkit-scrollbar { display: none; }
-  .pp-shot img {
-    width: 760px; max-width: none;
-    border: 0; border-radius: 0;
-  }
 
-  /* ścieżka procesu w jednej linii zamiast łamania z osieroconą strzałką */
-  .pp-flow {
-    flex-wrap: nowrap; overflow-x: auto;
-    scrollbar-width: none; padding-bottom: .3rem;
-  }
-  .pp-flow::-webkit-scrollbar { display: none; }
-  .pp-flow span { white-space: nowrap; }
+  /* ścieżka procesu: zawijamy i chowamy strzałki — inaczej zostają osierocone
+     na końcach wierszy, a kolejność pigułek i tak czyta się jako sekwencja */
+  .pp-flow { flex-wrap: wrap; gap: .35rem; }
+  .pp-flow i { display: none; }
+  .pp-flow span { white-space: nowrap; font-size: .73rem; }
 }
