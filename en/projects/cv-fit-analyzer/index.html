@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV Fit Analyzer — a CV generator tailored to a job ad | Marcin Lichtarski</title>
+<meta name="description" content="A CV generator tailored to a specific job ad, with a fit score that tells you whether applying is worth it, and a hard ban on inventing skills. Python, Streamlit, Gemini and OpenAI.">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="CV Fit Analyzer — a CV generator tailored to a job ad">
+<meta property="og:description" content="Fit scoring before generation, a ban on fabrication, four output formats, two LLM providers behind one interface.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lichtus.github.io/en/projects/cv-fit-analyzer/">
+<meta property="og:locale" content="en_GB">
+<link rel="alternate" hreflang="pl" href="https://lichtus.github.io/projekty/cv-fit-analyzer/">
+<link rel="alternate" hreflang="en" href="https://lichtus.github.io/en/projects/cv-fit-analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://lichtus.github.io/projekty/cv-fit-analyzer/">
+<link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+<div id="spot"></div>
+
+<article class="pp">
+
+  <div class="pp-top">
+    <a class="pp-back" href="../../"><span class="arr">←</span> Back to portfolio</a>
+    <div class="lang">
+      <a href="../../../projekty/cv-fit-analyzer/" hreflang="pl">PL</a><span class="sep">/</span><span class="on">EN</span>
+    </div>
+  </div>
+
+  <p class="pp-kicker">◆ Open source</p>
+  <h1>CV Fit Analyzer</h1>
+  <p class="pp-repo">
+    <a href="https://github.com/Lichtus/CV-Fit-Analyzer" target="_blank" rel="noopener noreferrer">Source code on GitHub ↗</a>
+  </p>
+
+  <p class="pp-lead">
+    A CV generator tailored to a specific job ad — with a score telling you whether
+    applying is worth it at all, and a hard ban on crediting the candidate with skills
+    they do not have.
+  </p>
+
+  <!-- ==================== PROBLEM ==================== -->
+  <section>
+    <h2>The problem</h2>
+    <p>
+      Tailoring a CV to an ad takes an hour: pull out the requirements, pick the matching
+      experience, rewrite the bullets, format the document. Across twenty applications —
+      a week. LLM-based generators do it in a minute, but carry a disqualifying flaw:
+      <strong>they invent skills, because it makes the match look better</strong>.
+      A CV like that stops working at the first interview.
+    </p>
+  </section>
+
+  <!-- ==================== NO FABRICATION ==================== -->
+  <section>
+    <h2>A ban on fabrication</h2>
+    <p>
+      The job ad is <strong>a selection filter, not a source of content</strong>. It decides
+      which real experiences to show and in which language — never what the CV claims.
+      The prompt is forbidden from copying keywords out of the ad into the skills and
+      bullets, and from inventing numbers.
+    </p>
+    <p>
+      The data that must not be paraphrased — name, contact details, education, courses,
+      languages — bypasses the model entirely and goes into the document straight from
+      the profile file. The importer works the same way in reverse: it transcribes, it does
+      not write. A missing value is an omitted field, never a guess.
+    </p>
+  </section>
+
+  <!-- ==================== PIPELINE ==================== -->
+  <section>
+    <h2>Pipeline</h2>
+    <div class="pp-flow">
+      <span>Analyse the ad</span><i>→</i>
+      <span>Score the fit</span><i>→</i>
+      <span>Generate the CV</span>
+    </div>
+    <p>
+      The third step only runs above a score threshold, so <strong>weak ads cost no
+      tokens</strong>. The scoring returns a result together with strengths and gaps,
+      which also answers the question of whether applying makes sense.
+    </p>
+  </section>
+
+  <!-- ==================== FEATURES ==================== -->
+  <section>
+    <h2>Features</h2>
+    <ul class="pp-list">
+      <li><b>Four formats</b> — an HTML report with the score, a DOCX reproduced pixel-for-pixel from a master file, an HTML CV laid out for A4 printing, and a PDF via headless Chrome</li>
+      <li><b>Universal mode</b> — a general CV with no job ad, one call instead of three, cached</li>
+      <li><b>CV import</b> — PDF sent natively to the model, DOCX and plain text handled locally; the result lands in the form, not straight on disk</li>
+      <li><b>Candidate profiles</b> — one file per person, an automatic backup before every save, a bin for deleted ones</li>
+      <li><b>Three languages</b> — a CV in Polish, English or German depending on the ad, with CEFR levels and per-language grammar rules for the bullets; interface in PL/EN</li>
+      <li><b>Data editor</b> — a validated form, with the photo embedded as a data URI, so a single JSON holds the complete dataset</li>
+      <li><b>Run history</b> — a companion file recording the role, the score and the language</li>
+    </ul>
+  </section>
+
+  <!-- ==================== MODELS AND KEYS ==================== -->
+  <section>
+    <h2>Models and API keys</h2>
+    <p>
+      Four models from two providers (Gemini 2.5 Flash and Pro, GPT-4o, GPT-4o mini),
+      selected from the sidebar. <strong>Adding a provider means one module satisfying
+      a six-part contract</strong> — the registry, the retry logic and key handling are shared.
+    </p>
+    <p>
+      Clients are built lazily, so a clone with no keys at all starts up normally.
+      Choosing a model without a key brings up a one-off form; the key goes into
+      <code>.env</code> with <code>600</code> permissions and takes effect without
+      a restart. A key rejected by the API comes back through the same path.
+    </p>
+    <p>
+      Retries: up to five attempts with exponential backoff, for transient errors only.
+      Candidate data, backups and keys stay local, outside the repository.
+    </p>
+  </section>
+
+  <!-- ==================== SCALE ==================== -->
+  <section>
+    <h2>Scale</h2>
+    <div class="pp-stats">
+      <div class="pp-stat">
+        <div class="n">5,100</div>
+        <div class="l">lines of Python across 17 modules</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">4</div>
+        <div class="l">LLM agents</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">2</div>
+        <div class="l">providers behind one interface</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">3</div>
+        <div class="l">document renderers</div>
+      </div>
+    </div>
+    <p style="margin-top:1.2rem">
+      Two front-ends — browser and command line — over a shared core.
+      The interface comes in two languages, the generated CV in three.
+    </p>
+  </section>
+
+  <!-- ==================== NOTABLE SOLUTIONS ==================== -->
+  <section>
+    <h2>Solutions worth a mention</h2>
+
+    <div class="pp-card">
+      <h3>A cache keyed by a hash of the data</h3>
+      <p>
+        The universal CV does not depend on any job ad, so it is rebuilt without calling
+        the model — roughly 20,000 fewer tokens per run. The key is a checksum of the
+        candidate's data, so any edit invalidates the entry by itself; nothing in the code
+        has to remember to clear it.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>Generation counters in widget keys</h3>
+      <p>
+        Streamlit ignores a field's initial value once its key already exists in the session —
+        after switching profiles the form still showed the previous name, and a new profile
+        could be saved carrying the previous candidate's data. A generation counter in the
+        key gives every version of the data its own namespace.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>PDF through headless Chrome</h3>
+      <p>
+        Chrome writes the document in a second, then hangs on updater tasks. Rather than
+        waiting for a clean exit, the function polls the output file until it stops growing,
+        then terminates the process.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== STACK ==================== -->
+  <section>
+    <h2>Stack</h2>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">Streamlit</span>
+      <span class="chip">Google Gemini API</span><span class="chip">OpenAI API</span>
+      <span class="chip">python-docx</span><span class="chip">Pillow</span>
+      <span class="chip">python-dotenv</span><span class="chip">headless Chrome</span>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section>
+    <div class="cta">
+      <h3>Want to talk about it?</h3>
+      <p>Happy to go into the agent architecture, or into keeping a model from making things up.</p>
+      <a class="cta-btn" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">
+        Message me on LinkedIn <span class="out">↗</span>
+      </a>
+    </div>
+    <footer style="margin-top:2rem">
+      <a href="../../">← Back to portfolio</a>
+    </footer>
+  </section>
+
+</article>
+
+<script src="../../../script.js"></script>
+</body>
+</html>

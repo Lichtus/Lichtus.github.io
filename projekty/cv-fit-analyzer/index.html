@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CV Fit Analyzer — generator CV dopasowanego do ogłoszenia | Marcin Lichtarski</title>
+<meta name="description" content="Generator CV dopasowanego do konkretnego ogłoszenia, z oceną sensu aplikowania i twardym zakazem dopisywania kompetencji. Python, Streamlit, Gemini i OpenAI.">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:title" content="CV Fit Analyzer — generator CV dopasowanego do ogłoszenia">
+<meta property="og:description" content="Ocena dopasowania przed generowaniem, zakaz konfabulacji, cztery formaty wyjściowe, dwóch dostawców LLM za wspólnym interfejsem.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://lichtus.github.io/projekty/cv-fit-analyzer/">
+<meta property="og:locale" content="pl_PL">
+<link rel="alternate" hreflang="pl" href="https://lichtus.github.io/projekty/cv-fit-analyzer/">
+<link rel="alternate" hreflang="en" href="https://lichtus.github.io/en/projects/cv-fit-analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://lichtus.github.io/projekty/cv-fit-analyzer/">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div id="spot"></div>
+
+<article class="pp">
+
+  <div class="pp-top">
+    <a class="pp-back" href="../../"><span class="arr">←</span> Powrót do portfolio</a>
+    <div class="lang">
+      <span class="on">PL</span><span class="sep">/</span><a href="../../en/projects/cv-fit-analyzer/" hreflang="en">EN</a>
+    </div>
+  </div>
+
+  <p class="pp-kicker">◆ Kod publiczny</p>
+  <h1>CV Fit Analyzer</h1>
+  <p class="pp-repo">
+    <a href="https://github.com/Lichtus/CV-Fit-Analyzer" target="_blank" rel="noopener noreferrer">Kod źródłowy na GitHubie ↗</a>
+  </p>
+
+  <p class="pp-lead">
+    Generator CV dopasowanego do konkretnego ogłoszenia — z oceną, czy w ogóle warto
+    aplikować, i z twardym zakazem dopisywania kandydatowi kompetencji, których nie ma.
+  </p>
+
+  <!-- ==================== PROBLEM ==================== -->
+  <section>
+    <h2>Problem</h2>
+    <p>
+      Dopasowanie CV do oferty to godzina pracy: wyłowić wymagania, wybrać pasujące
+      doświadczenia, przepisać bullety, sformatować dokument. Przy dwudziestu
+      aplikacjach — tydzień. Generatory oparte na LLM robią to w minutę, ale mają wadę
+      dyskwalifikującą: <strong>dopisują kompetencje, bo tak lepiej wypada
+      dopasowanie</strong>. Takie CV przestaje działać na pierwszej rozmowie.
+    </p>
+  </section>
+
+  <!-- ==================== ZAKAZ KONFABULACJI ==================== -->
+  <section>
+    <h2>Zakaz konfabulacji</h2>
+    <p>
+      Ogłoszenie jest <strong>filtrem wyboru, nie źródłem treści</strong>. Decyduje,
+      które prawdziwe doświadczenia pokazać i w jakim języku — nigdy o tym, co CV twierdzi.
+      Prompt ma zakazane przepisywanie słów kluczowych z oferty do umiejętności i bulletów
+      oraz wymyślanie liczb.
+    </p>
+    <p>
+      Dane, których nie wolno sparafrazować — nazwisko, kontakt, wykształcenie, kursy,
+      języki — omijają model i trafiają do dokumentu wprost z pliku profilu. Importer
+      działa tak samo w drugą stronę: transkrybuje, nie pisze. Brak wartości to pominięte
+      pole, nigdy zgadywanie.
+    </p>
+  </section>
+
+  <!-- ==================== PIPELINE ==================== -->
+  <section>
+    <h2>Pipeline</h2>
+    <div class="pp-flow">
+      <span>Analiza ogłoszenia</span><i>→</i>
+      <span>Ocena dopasowania</span><i>→</i>
+      <span>Generowanie CV</span>
+    </div>
+    <p>
+      Trzeci krok rusza wyłącznie powyżej progu punktowego, więc <strong>słabe oferty
+      nie kosztują tokenów</strong>. Ocena zwraca wynik razem z mocnymi stronami i lukami,
+      czyli odpowiada też na pytanie, czy aplikowanie ma sens.
+    </p>
+  </section>
+
+  <!-- ==================== FUNKCJE ==================== -->
+  <section>
+    <h2>Funkcje</h2>
+    <ul class="pp-list">
+      <li><b>Cztery formaty</b> — raport HTML z oceną, DOCX odtworzony co do piksela z wzorca, CV HTML pod druk A4 oraz PDF przez headless Chrome</li>
+      <li><b>Tryb uniwersalny</b> — CV ogólne bez ogłoszenia, jedno wywołanie zamiast trzech, cache'owane</li>
+      <li><b>Import CV</b> — PDF natywnie do modelu, DOCX i tekst lokalnie; wynik trafia do formularza, nie od razu na dysk</li>
+      <li><b>Profile kandydatów</b> — plik na osobę, automatyczny backup przed każdym zapisem, kosz na usunięte</li>
+      <li><b>Trójjęzyczność</b> — CV po polsku, angielsku lub niemiecku wg języka ogłoszenia, z poziomami CEFR i regułami gramatycznymi bulletów osobno dla każdego języka; interfejs PL/EN</li>
+      <li><b>Edytor danych</b> — formularz z walidacją, zdjęcie osadzane jako data URI, więc jeden JSON to komplet danych</li>
+      <li><b>Historia przebiegów</b> — plik towarzyszący z rolą, wynikiem i językiem</li>
+    </ul>
+  </section>
+
+  <!-- ==================== MODELE I KLUCZE ==================== -->
+  <section>
+    <h2>Modele i klucze API</h2>
+    <p>
+      Cztery modele od dwóch dostawców (Gemini 2.5 Flash i Pro, GPT-4o, GPT-4o mini),
+      wybierane z panelu bocznego. <strong>Dodanie dostawcy to jeden moduł spełniający
+      sześcioelementowy kontrakt</strong> — rejestr, ponawianie i obsługa kluczy są wspólne.
+    </p>
+    <p>
+      Klienty budowane leniwie, więc klon bez żadnego klucza uruchamia się normalnie.
+      Wybór modelu bez klucza podstawia jednorazowy formularz; klucz trafia do
+      <code>.env</code> z uprawnieniami <code>600</code> i działa bez restartu. Klucz
+      odrzucony przez API wraca tą samą ścieżką.
+    </p>
+    <p>
+      Ponawianie: do pięciu prób z wykładniczym odstępem, wyłącznie dla błędów
+      przejściowych. Dane kandydata, backupy i klucze zostają lokalnie, poza repozytorium.
+    </p>
+  </section>
+
+  <!-- ==================== SKALA ==================== -->
+  <section>
+    <h2>Skala</h2>
+    <div class="pp-stats">
+      <div class="pp-stat">
+        <div class="n">5 100</div>
+        <div class="l">linii Pythona w 17 modułach</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">4</div>
+        <div class="l">agenty LLM</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">2</div>
+        <div class="l">dostawców za wspólnym interfejsem</div>
+      </div>
+      <div class="pp-stat">
+        <div class="n">3</div>
+        <div class="l">renderery dokumentów</div>
+      </div>
+    </div>
+    <p style="margin-top:1.2rem">
+      Dwa front-endy — przeglądarkowy i konsolowy — nad wspólnym rdzeniem.
+      Interfejs w dwóch językach, generowane CV w trzech.
+    </p>
+  </section>
+
+  <!-- ==================== ROZWIĄZANIA ==================== -->
+  <section>
+    <h2>Rozwiązania warte uwagi</h2>
+
+    <div class="pp-card">
+      <h3>Cache kluczowany hashem danych</h3>
+      <p>
+        CV uniwersalne nie zależy od ogłoszenia, więc jest odtwarzane bez wywołania
+        modelu — około 20 tysięcy tokenów mniej na przebieg. Kluczem jest suma kontrolna
+        danych kandydata, więc każda edycja unieważnia wpis sama; nic w kodzie nie musi
+        pamiętać o czyszczeniu.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>Generacyjne klucze widgetów</h3>
+      <p>
+        Streamlit ignoruje wartość początkową pola, gdy jego klucz już istnieje w sesji —
+        po przełączeniu profilu formularz pokazywał stare nazwisko, a nowy profil dawało
+        się zapisać z danymi poprzedniego kandydata. Licznik generacji w kluczu daje
+        każdej wersji danych własną przestrzeń nazw.
+      </p>
+    </div>
+
+    <div class="pp-card">
+      <h3>PDF przez headless Chrome</h3>
+      <p>
+        Chrome zapisuje dokument w sekundę, po czym wisi na zadaniach aktualizatora.
+        Zamiast czekać na czyste wyjście, funkcja odpytuje plik wynikowy, aż przestanie
+        rosnąć, i kończy proces.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== STACK ==================== -->
+  <section>
+    <h2>Stack</h2>
+    <div class="chips">
+      <span class="chip">Python</span><span class="chip">Streamlit</span>
+      <span class="chip">Google Gemini API</span><span class="chip">OpenAI API</span>
+      <span class="chip">python-docx</span><span class="chip">Pillow</span>
+      <span class="chip">python-dotenv</span><span class="chip">headless Chrome</span>
+    </div>
+  </section>
+
+  <!-- ==================== KONTAKT ==================== -->
+  <section>
+    <div class="cta">
+      <h3>Chcesz o tym porozmawiać?</h3>
+      <p>Chętnie opowiem o architekturze agentów albo o pilnowaniu modelu, żeby nie zmyślał.</p>
+      <a class="cta-btn" href="https://www.linkedin.com/in/marcin-lichtarski/" target="_blank" rel="noopener noreferrer">
+        Napisz na LinkedIn <span class="out">↗</span>
+      </a>
+    </div>
+    <footer style="margin-top:2rem">
+      <a href="../../">← Powrót do portfolio</a>
+    </footer>
+  </section>
+
+</article>
+
+<script src="../../script.js"></script>
+</body>
+</html>
